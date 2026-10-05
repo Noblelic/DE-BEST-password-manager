@@ -224,7 +224,7 @@ while True:
           savedHash = data["master_pin_hash"]
           attempt = 3
           while attempt > 0:
-             entered_pin = input("Enter you Master pin")
+             entered_pin = getpass.getpass("Enter you Master pin")
              entered_pinHash = hashlib.sha256(entered_pin.encode()).hexdigest()
       
              if entered_pinHash == savedHash:
