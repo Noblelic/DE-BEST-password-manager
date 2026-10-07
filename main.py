@@ -6,7 +6,7 @@ import getpass
 
 
 def enterPassword():
-   website = input('Enter website name:').title()
+   website = input('Enter website or app name:').title()
    username = input('Enter your username:').title()
    password = getpass.getpass('Enter your password:')
    key = key_main()
@@ -105,6 +105,7 @@ def password_edit():
                 break
          else:
             print('No website match!')
+            password_edit()
    else:
       print('No saved passwords yet')
 
@@ -150,21 +151,6 @@ def search_password():
       print('No saved passwords yet')
 
 
-def ask_to_save(accountName,password):
-   while True:
-      answer = input('Do you want to save password ?(yes/no):').strip().lower()
-
-      if answer == 'yes':
-         enterPassword()
-         print('Password saved successfully')
-         break
-      elif answer == 'no':
-         print('Password was not saved')
-         break
-      else:
-         print('Pleas enter yes or no.')
-
-
 
 
    
@@ -180,28 +166,39 @@ def menu():
       print("3. Edit password")
       print("4. Delete password")
       print("5. Search password")
-      print("6. Check password strength")
-      print("7. Suggest strong password")
-      print("8. Exit Menu")
+      print("6. Exit Menu")
       
 
       choice = int(input('What would you like to do? Input an option'))
       if choice == 1:
          enterPassword()
       elif choice == 2:
-         print('Input your master pin')
-         pinConfirm = input()
-         if pinConfirm == entered_pin:
-           view_password()
+         if os.path.exists("masterPinSaver.json"):
+               with open ("masterPinSaver.json", "r") as file:
+                   data = json.load(file)
+                   savedHash = data["master_pin_hash"]
+                   attempt = 3
+                   while attempt > 0:
+                      entered_pin = getpass.getpass("Enter you Master pin")
+                      entered_pinHash = hashlib.sha256(entered_pin.encode()).hexdigest()
+               
+                      if entered_pinHash == savedHash:
+                        view_password()   
+                        break  
+                      else: 
+                        attempt = attempt - 1
+                        print('Incorrect Master pin')
+                        print(f'You have {attempt} attempt(s) left')
          else:
-            print('Pin is incorrect!')
+           print("No saved password yet") 
+               
       elif choice == 3:
          password_edit()
       elif choice == 4:
          delete_password() 
       elif choice == 5:
          search_password() 
-      elif choice == 8:
+      elif choice == 6:
          print("Goodbye! See you later.")
          break
       else:
@@ -211,9 +208,9 @@ def menu():
 
 
 
-
+if __name__ == "__main__":
    
-while True:
+ while True:
     print('========Welcome======== ')
     print("=========================")
     print("DE BEST PASSWORD MANAGER")
@@ -260,4 +257,5 @@ while True:
          print('Pins do not match')
       else:
         print('PIN must be exactly 4 digits')
+
         
